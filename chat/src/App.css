@@ -15,6 +15,7 @@ li a div { color:black }
 
 time { color:#d3d3d3 }
 
+
 .App {
   text-align: center;
 }
@@ -26,11 +27,18 @@ time { color:#d3d3d3 }
 .App-header {
   background-color: #282c34;
   height: 60px;
+  width: 100%;
   margin-bottom:20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 1.2vmin);
   color: white;
+}
+
+.App-header .MuiIconButton-root {
+  position:absolute!important;
+  right:10px;
+  display: block;
 }

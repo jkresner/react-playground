@@ -1,11 +1,12 @@
-import data from './model.data';
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import './App.css';
+import SignUp from './signup';
+import data from './model.data';
 
 /*
 <div class="full chat">
@@ -65,6 +66,9 @@ class Thread extends React.Component {
 
     return (<div>
       <ul id="chat">{items}</ul>
+      <IconButton color="primary" aria-label="send">
+        <EmailOutlinedIcon />
+      </IconButton>
       <IconButton onClick={onClose} color="secondary" aria-label="back">
         <ArrowBackIcon /> Close
       </IconButton>
@@ -100,7 +104,6 @@ class Inbox extends React.Component {
   }
 
   closeChat() {
-    console.log('closing chat')
     this.setState({ current: null });
   }
 
@@ -119,6 +122,8 @@ class Inbox extends React.Component {
   // - time {{ ago last._id }}
   // - md last.text  
   render() {
+    if (this.props.hidden) return '' 
+
     let {current,chats} = this.state
     
     if (current) 
@@ -135,7 +140,7 @@ class Inbox extends React.Component {
         <li key={c._id} 
             onClick={() => this.openChat(c)}
             className="unread">
-          <Icon color="action" fontSize="large">markunread</Icon>
+          <MarkunreadMailboxIcon color="action" fontSize="large" />
           <time>time ago</time>
           <h3>{c.title}</h3>
           <div>{c.last.text}</div>
@@ -148,16 +153,52 @@ class Inbox extends React.Component {
 
 }
 
+class SignUpPage extends React.Component {
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>chat</h1>
-      </header>
-      <Inbox data={data} />
-    </div>
-  );
+  render() {
+    if (this.props.hidden) return '';
+
+    return (
+      <SignUp hidden={this.props.hidden} />
+    );
+  }
+
+}
+
+
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      signUp: false,
+    };
+  }
+
+  toggleSignUp() {
+    this.setState({ signUp: !this.state.signUp });
+  }
+
+  render() {
+    let {signUp} = this.state
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          <IconButton 
+            onClick={ () => this.toggleSignUp() } 
+            color="secondary"
+          >
+            <PersonAddIcon />
+          </IconButton>
+          <h1>chat</h1>
+        </header>
+        <Inbox data={data} hidden={signUp}  />
+        <SignUpPage hidden={!signUp} />
+      </div>
+    );
+  }
+
 }
 
 
