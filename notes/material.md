@@ -1,5 +1,8 @@
 ### Icons
 
+[Icon search](https://material-ui.com/components/material-icons)
+
+
 ```js
 import AccessAlarmIcon from '@material-ui/icons/AccessAlarm';
 ```
