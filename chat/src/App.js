@@ -1,7 +1,11 @@
-import React from 'react';
-import './App.css';
 import data from './model.data';
-
+import React from 'react';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
+import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
+import './App.css';
 
 /*
 <div class="full chat">
@@ -51,8 +55,6 @@ class Thread extends React.Component {
     const messages = data.history;
 
     const items = messages.map((m) => {
-      console.log('m', m)
-
       return (<Message 
         key={m._id}
         text={m.text}
@@ -63,7 +65,9 @@ class Thread extends React.Component {
 
     return (<div>
       <ul id="chat">{items}</ul>
-      <button onClick={onClose}>Close</button>
+      <IconButton onClick={onClose} color="secondary" aria-label="back">
+        <ArrowBackIcon /> Close
+      </IconButton>
       </div>
     );
   }
@@ -128,16 +132,13 @@ class Inbox extends React.Component {
 
     let list = this.state.chats.map((c, idx) => {
       return (
-        <li key={c._id} className="unread">
-          <a href="#messages/{c._id}" 
-             onClick={() => this.openChat(c)}
-             >
-            <time>time ago</time>
-            <div>
-              <h3>{c.title}</h3>
-              {c.last.text}
-            </div>
-          </a>  
+        <li key={c._id} 
+            onClick={() => this.openChat(c)}
+            className="unread">
+          <Icon color="action" fontSize="large">markunread</Icon>
+          <time>time ago</time>
+          <h3>{c.title}</h3>
+          <div>{c.last.text}</div>
         </li>
       );
     });
