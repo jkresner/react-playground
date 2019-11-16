@@ -1,46 +1,43 @@
 import React from 'react';
+import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
 import SignUp from './signup';
 import data from './model.data';
+import { MaxHeightTextarea } from './input';
 
-/*
-<div class="full chat">
-  <ul id="chat">
-    {{#each r.history}}
-    <li {{#if user.avatar }}{{else}}class="me"{{/if}}>
-      <time>{{ ago _id }}</time>
-      {{#if user.avatar }}<img src="{{ user.avatar }}" alt="{{ user.name }}">{{/if}}
-      <div>{{ markup text}}</div>
-    </li>
-    {{/each}}
-  </ul>
-  <form id="messageForm">
-    <fieldset>
-      <input type="hidden" id="chatId" value="{{r._id}}" />
-      <input type="hidden" id="postId" value="{{r.postId}}" />
-      <textarea id="text" placeholder="Text Message"></textarea>
-      <a class="ion-arrow-up-c btn" href="#"></a>
-    </fieldset>
-  </form>
-</div>
-*/
+
+const themeStyles = makeStyles( theme => ({
+  
+  avatar: {
+    margin: theme.spacing(1),
+    borderColor: theme.palette.secondary.main,
+    borderStyle: "solid",
+    borderWidth: 1,
+    width: 60,
+    height: 60,
+  }
+
+}));
 
 
 // ### TODO 
 //- markup text (md)
 //- assign li class on message owner
 //- imp ago time
-function Message(props) {
+function Message({id,time,text,name,avatar}) {
+  const styles = themeStyles()
+
   return (
-    <li key={props.id} className="me">
-        <time>{props.time}</time>
-        <img src={props.avatar} alt={props.name} />
-        <div>{props.text}</div> 
+    <li key={id} className="me">
+        <time>{time}</time>
+        <Avatar alt={name} src={avatar} className={styles.avatar}  />
+        <div>{text}</div> 
     </li>
   );
 }
@@ -66,6 +63,7 @@ class Thread extends React.Component {
 
     return (<div>
       <ul id="chat">{items}</ul>
+      <MaxHeightTextarea />
       <IconButton color="primary" aria-label="send">
         <EmailOutlinedIcon />
       </IconButton>
@@ -156,11 +154,9 @@ class Inbox extends React.Component {
 class SignUpPage extends React.Component {
 
   render() {
-    if (this.props.hidden) return '';
-
-    return (
+    return this.props.hidden ? null : (
       <SignUp hidden={this.props.hidden} />
-    );
+    )
   }
 
 }
