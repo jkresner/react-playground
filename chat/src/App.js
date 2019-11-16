@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }  from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -7,6 +7,7 @@ import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import { makeStyles } from '@material-ui/core/styles';
 import './App.css';
+import marked  from 'marked';
 import SignUp from './signup';
 import data from './model.data';
 import { MaxHeightTextarea } from './input';
@@ -27,54 +28,44 @@ const themeStyles = makeStyles( theme => ({
 
 
 // ### TODO 
-//- markup text (md)
-//- assign li class on message owner
 //- imp ago time
-function Message({id,time,text,name,avatar}) {
+function Message({id,me,time,text,name,avatar}) {
   const styles = themeStyles()
 
   return (
-    <li key={id} className="me">
+    <li key={id} className={me ? 'me' : ''}>
         <time>{time}</time>
         <Avatar alt={name} src={avatar} className={styles.avatar}  />
-        <div>{text}</div> 
+        <div dangerouslySetInnerHTML={({__html:marked(text)})}/>
     </li>
   );
 }
 
 
-class Thread extends React.Component {
+function Thread({data,onClose}) {
+  if (!data) return ('');
 
-  render() {
-    let {data,onClose} = this.props;
+  const messages = data.history;
 
-    if (!data) return ('');
+  const items = messages.map((m) => (<Message 
+    key={m._id}
+    text={m.text}
+    name={m.user.name}
+    avatar={m.user.avatar} 
+    time="soon" />)
+  );
 
-    const messages = data.history;
-
-    const items = messages.map((m) => {
-      return (<Message 
-        key={m._id}
-        text={m.text}
-        name={m.user.name}
-        avatar={m.user.avatar} 
-        time="soon" />);
-    });
-
-    return (<div>
-      <ul id="chat">{items}</ul>
-      <MaxHeightTextarea />
-      <IconButton color="primary" aria-label="send">
-        <EmailOutlinedIcon />
-      </IconButton>
-      <IconButton onClick={onClose} color="secondary" aria-label="back">
-        <ArrowBackIcon /> Close
-      </IconButton>
-      </div>
-    );
-  }
-
+  return (<div>
+    <ul id="chat">{items}</ul>
+    <MaxHeightTextarea />
+    <IconButton color="primary" aria-label="send"><EmailOutlinedIcon /></IconButton>
+    <IconButton onClick={onClose} color="secondary" aria-label="back">
+      <ArrowBackIcon /> Close
+    </IconButton>
+  </div>);
 }
+
+
 
 /* chats: 
     _id
@@ -87,78 +78,39 @@ class Thread extends React.Component {
     ]
     last
 */
-class Inbox extends React.Component {
+function Inbox(props) {
+  let [chats] = useState(props.data.chats) // , setChats
+  let [current, setCurrent] = useState(null);
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      chats: props.data.chats,
-      current: null,
-    };
-  }
-
-  openChat(chat) {
-    this.setState({ current: chat });
-  }
-
-  closeChat() {
-    this.setState({ current: null });
-  }
-
-  renderEmpty() {
-    return (
-      <div><br/>
-      <p>No messages yet</p>
-      </div>
-    );
-  }
+  let openChat = (chat) => setCurrent(chat)
+  const styles = themeStyles()
 
   // TODO 
   // - un-hardcode unread class
   // - {{#each with}}
   //     <img class="media-object" src="{{avatar}}" alt="{{name}}" />
   // - time {{ ago last._id }}
-  // - md last.text  
-  render() {
-    if (this.props.hidden) return '' 
+  if (props.hidden) return null    
+  if (current) return (<Thread data={current} onClose={()=>setCurrent(null)} />)
+  if (!chats.length) return (<div><br/><p>No messages yet</p></div>)
 
-    let {current,chats} = this.state
-    
-    if (current) 
-      return (<Thread 
-          data={current} 
-          onClose={() => this.closeChat() } 
-        />);
-     
-    if (!chats.length) 
-      return this.renderEmpty()
+  let list = chats.map((c, idx) => (
+    <li key={c._id} 
+        onClick={() => openChat(c)}
+        className="unread">
+      <Avatar alt={c.title} src={c.avatar} className={styles.avatar}  />
+      <MarkunreadMailboxIcon color="action" fontSize="large" />
+      <time>time ago</time>
+      <h3>{c.title}</h3>
+      <div dangerouslySetInnerHTML={({__html:marked(c.last.text)})}/>
+    </li>))
 
-    let list = this.state.chats.map((c, idx) => {
-      return (
-        <li key={c._id} 
-            onClick={() => this.openChat(c)}
-            className="unread">
-          <MarkunreadMailboxIcon color="action" fontSize="large" />
-          <time>time ago</time>
-          <h3>{c.title}</h3>
-          <div>{c.last.text}</div>
-        </li>
-      );
-    });
-
-    return (<ul id="inbox">{list}</ul>);
-  }
-
+  return (<ul id="inbox">{list}</ul>);
 }
 
-class SignUpPage extends React.Component {
 
-  render() {
-    return this.props.hidden ? null : (
-      <SignUp hidden={this.props.hidden} />
-    )
-  }
-
+function SignUpPage({hidden}) {
+  return hidden ? null : (<SignUp hidden={hidden} />)
 }
 
 
