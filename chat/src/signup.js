@@ -14,6 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -55,6 +59,11 @@ const useStyles = makeStyles(theme => ({
 export default function SignUp() {
   const classes = useStyles();
 
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
+  const handleDateChange = date => { setSelectedDate(date) };
+
+
   return (
     <Container component="main" maxWidth="xs" id="sup">
       <CssBaseline />
@@ -89,6 +98,21 @@ export default function SignUp() {
                 name="lastName"
                 autoComplete="lname"
               />
+            </Grid>
+            <Grid item xs={12}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="yyyy MM dd"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Birth date["
+                  value={selectedDate}
+                  onChange={handleDateChange}
+                  KeyboardButtonProps={{ 'aria-label': 'change date' }}
+                />
+              </MuiPickersUtilsProvider>
             </Grid>
             <Grid item xs={12}>
               <TextField
