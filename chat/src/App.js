@@ -3,11 +3,13 @@ import AppBar from '@material-ui/core/AppBar';
 import Box from '@material-ui/core/Box';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
-import Slide from '@material-ui/core/Slide';
 import Container from '@material-ui/core/Container';
+import IconButton from '@material-ui/core/IconButton';
+import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-
+import Toolbar from '@material-ui/core/Toolbar';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
 
 import './App.css';
@@ -51,16 +53,19 @@ function App(props) {
   let [page,setPage] = useState(0)
   let [chat,setChat] = useState(null)
 
-  let openChat = (val) => { 
-    setChat(val)
-    setPage(1) 
-  } 
+  let openChat = (val) => { setChat(val); setPage(1); }
+  let onBack = (val) => { setChat(null); setPage(0); }
   let handleTab = (e, val) => setPage(val)  
 
   return (<div>
     <HideOnScroll {...props}>
       <AppBar className={css.appBar}>
-        <Typography variant="h6">{pages[page]}</Typography>
+        <Toolbar>{ page !== 0 &&
+          (<IconButton onClick={onBack} aria-label="back">
+            <ArrowBackIcon /> 
+          </IconButton>) } 
+          <Typography variant="h6">{pages[page]}</Typography>
+        </Toolbar>
       </AppBar>
     </HideOnScroll>
     <Container className={css.tabPanel}>

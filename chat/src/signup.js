@@ -11,9 +11,7 @@ import Link from '@material-ui/core/Link';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-
-
+import themeStyles from './App.css.js';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
@@ -30,34 +28,9 @@ function Copyright() {
 }
 
 
-const useStyles = makeStyles(theme => ({
-  '@global': {
-    body: {
-      backgroundColor: theme.palette.common.white,
-    },
-  },
-  paper: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    marginTop: theme.spacing(3),
-    width: '100%', // Fix IE 11 issue.
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 
 export default function SignUp() {
-  const classes = useStyles();
+  const classes = themeStyles();
 
   const [selectedDate, setSelectedDate] = React.useState(new Date());
 

@@ -42,22 +42,22 @@ const [me,jk,ag,em] = usr
     //     avatar
 const chats = [{ 
   users: [jk],
-  history: [{ _id: 'aab12401', user: me, time: Utc('191012 08'), text: `First message` },
-            { _id: 'aab12401', user: me, time: Utc('191012 08'), text: `Second message` }, 
+  history: [{ _id: 'aab12404', user: me, time: Utc('191012 08'), text: `First message` },
+            { _id: 'aab12403', user: me, time: Utc('191012 08'), text: `Second message` }, 
             { _id: 'aab12402', user: jk, time: Utc('191012 13'), text: `Let me check with the misses.` },
             { _id: 'aab12401', user: jk, time: Utc('191012 08'), text: `OK let's do it` }, 
            ]
 },{  
   users: [ag],
-  history: [{ _id: 'aab12401', user: ag, time: Utc('190802 08'), text: `Hello there!` },
-            { _id: 'aab12401', user: me, time: Utc('190802 08'), text: `Let's meet there at 3pm!` }
+  history: [{ _id: 'abb12402', user: ag, time: Utc('190802 08'), text: `Hello there!` },
+            { _id: 'abb12401', user: me, time: Utc('190802 08'), text: `Let's meet there at 3pm!` }
             ]
 },{  
   users: [em],
-  history: [{ _id: 'aab12401', user: em, time: Utc('191112 08'), text: `Hello there!` }]  
+  history: [{ _id: 'acb12401', user: em, time: Utc('191112 08'), text: `Hello there!` }]  
 },{  
   users: [em,jk,ag],
-  history: [{ _id: 'aab12401', user: em, time: Utc('181111 11'), text: `See ya'll soon` }]  
+  history: [{ _id: 'adb12401', user: em, time: Utc('181111 11'), text: `See ya'll soon` }]  
 }];
     
 

@@ -1,38 +1,50 @@
-import React, { useState }  from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import { MaxHeightTextarea } from './input';
 import marked  from 'marked';
-import themeStyles from './App.css.js';
+import React, { useState }  from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined';
 import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
+import Avatar from '@material-ui/core/Avatar';
+import Grid from '@material-ui/core/Grid';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import themeStyles from './App.css.js';
+import { TextareaAutosize } from '@material-ui/core';
 
 
-function TimeAgo({ago}) {
-  return (<time>{ago.fromNow()}</time>);
-}
+var MaxHeightTextarea = (props) => (
+  <TextareaAutosize
+    {...props}
+    variant="outlined"
+    required   
+    autoFocus
+    fullWidth
+    rowsMax={4}
+  />);
 
 
-function Message({id,me,time,text,name,avatar}) {
-  const css = themeStyles()
 
-  return (
-    <li key={id} className={me ? 'me' : ''}>
-        <TimeAgo ago={time} />
-        <Avatar alt={name} src={avatar} className={css.avatar}  />
-        <div dangerouslySetInnerHTML={({__html:marked(text)})}/>
-    </li>
-  );
-}
+var TimeAgo = ({ago}) => (<time>{ago.fromNow()}</time> )
+
+var Message = ({id,me,time,text,name,avatar,css}) => (
+  <ListItem divider
+      alignItems="flex-start"key={id} className={me ? 'me' : ''}>
+    <TimeAgo ago={time} />
+    <Avatar alt={name} src={avatar} className={css.avatar}  />
+    <div dangerouslySetInnerHTML={({__html:marked(text)})}/>
+  </ListItem>);
 
 
-export function Thread({data,onClose}) {
+
+export function Thread({data}) {
   if (!data) return ('');
 
+  const css = themeStyles()
   const messages = data.history;
 
   const items = messages.map((m) => (<Message 
+    css={css}
     key={m._id}
     text={m.text}
     name={m.user.name}
@@ -40,16 +52,48 @@ export function Thread({data,onClose}) {
     time={m.time} />)
   );
 
-  return (<div>
-    <ul id="chat">{items}</ul>
-    <MaxHeightTextarea />
-    <IconButton color="primary" aria-label="send"><EmailOutlinedIcon /></IconButton>
-    <IconButton onClick={onClose} color="secondary" aria-label="back">
-      <ArrowBackIcon /> Close
-    </IconButton>
-  </div>);
+  return (<>
+    <List id="chat">{items}</List>
+    <form className={css.form} noValidate>
+      <Grid container spacing={2}>
+        <Grid item xs={11}>
+          <MaxHeightTextarea id="message" name="message" autoComplete="msg" placeholder="Type message ..." />
+        </Grid>  
+        <Grid item xs={1}>
+          <IconButton variant="contained" type="submit" color="primary" aria-label="send"><EmailOutlinedIcon /></IconButton>
+        </Grid>  
+      </Grid>  
+    </form>
+  </>);
 }
 
+
+function Chat(props) {
+  let {c,css} = props
+  return (<ListItem 
+      divider
+      alignItems="flex-start"
+      key={c._id} 
+      onClick={() => props.openChat(c)}
+      className={c.unread ? 'unread' : ''}>
+    <ListItemAvatar>
+      <Avatar alt={c.title} src={c.avatar} className={css.avatar}  />
+    </ListItemAvatar>
+    <ListItemText 
+        primary={c.title}
+        secondary={
+          <React.Fragment>            
+            <TimeAgo ago={c.last.time} /> 
+            {c.last.text}
+          </React.Fragment>
+        }
+    />      
+    <MarkunreadMailboxIcon color="action" fontSize="large" />
+  </ListItem>);
+}
+
+/*
+<div dangerouslySetInnerHTML={({__html:marked(c.last.text)})}/>*/
 
 /* chats: 
     _id
@@ -69,16 +113,11 @@ export function Inbox(props) {
   if (props.hidden) return null    
   if (!chats.length) return (<div><br/><p>No messages yet</p></div>)
 
-  let list = chats.map((c, idx) => (
-    <li key={c._id} 
-        onClick={() => props.openChat(c)}
-        className={c.unread ? 'unread' : ''}>
-      <MarkunreadMailboxIcon color="action" fontSize="large" />
-      <Avatar alt={c.title} src={c.avatar} className={css.avatar}  />
-      <TimeAgo ago={c.last.time} />
-      <h3>{c.title}</h3>
-      <div dangerouslySetInnerHTML={({__html:marked(c.last.text)})}/>
-    </li>))
+  let items = chats.map((c, idx) => 
+    (<Chat key={c._id} c={c} openChat={props.openChat} css={css} />))
 
-  return (<ul id="inbox">{list}</ul>);
+  return (
+    <List className={css.inbox}>
+      {items}
+    </List>);
 }
