@@ -41,8 +41,8 @@ const chats = [{
 
 
 module.exports = { chats: [
-  { _id: '11aaaa', avatar: jk.avatar, title: jk.name, history: chats[0].history, last: { text: `let's do it` } },
+  { _id: '11aaaa', avatar: jk.avatar, title: jk.name, unread: true, history: chats[0].history, last: { text: `let's do it` } },
   { _id: '11aaab', avatar: ag.avatar, title: ag.name, history: chats[1].history, last: { text: `want to meet there?` } },
-  { _id: '11aaac', avatar: em.avatar, title: em.name, history: chats[2].history, last: { text: `how about top rope?` } },
+  { _id: '11aaac', avatar: em.avatar, title: em.name, unread: true, history: chats[2].history, last: { text: `how about top rope?` } },
   { _id: '22aaac', avatar: '', title: 'Touchstone friends', history: chats[3].history, last: { text: `See ya'll soon` } },  
 ]}
